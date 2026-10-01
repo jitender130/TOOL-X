@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Link, updatePageSeo } from '../router';
+import { updatePageSeo } from '../router';
 import { ALL_TOOLS } from '../data/tools';
 import { CATEGORY_LIST } from '../data/categories';
 import { Breadcrumbs } from '../components/common/Breadcrumbs';
 import { AdPlaceholder } from '../components/common/AdPlaceholder';
-import { Search, ArrowRight, Filter } from 'lucide-react';
+import { ToolCard } from '../components/tool/ToolCard';
+import { getCategoryTheme } from '../utils/categoryTheme';
+import { Search, X, Sparkles } from 'lucide-react';
 import { ToolCategory } from '../types';
 
 export const AllToolsPage: React.FC = () => {
@@ -31,63 +33,84 @@ export const AllToolsPage: React.FC = () => {
   });
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-8">
       <Breadcrumbs items={[{ label: 'All Tools' }]} />
 
-      <div className="text-center sm:text-left mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold tracking-tight text-slate-900">
-          All Online Tools
+      {/* Header with Colorful Accent */}
+      <div className="text-center sm:text-left">
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold uppercase tracking-wider bg-emerald-50 text-emerald-700 border border-emerald-200/80 rounded-full mb-3">
+          <Sparkles className="w-3.5 h-3.5 text-emerald-600" />
+          <span>Full Utilities Directory</span>
+        </div>
+        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">
+          All Online <span className="bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">Tools</span>
         </h1>
-        <p className="mt-2 text-sm sm:text-base text-slate-500 max-w-2xl">
-          Browse our complete directory of 50+ free, client-side productivity utilities.
+        <p className="mt-2 text-sm sm:text-base text-slate-500 max-w-2xl leading-relaxed">
+          Browse our complete directory of 50+ free, client-side productivity utilities with zero server uploads and 100% privacy.
         </p>
       </div>
 
-      {/* Filter and Search Bar */}
-      <div className="space-y-4 mb-8">
+      {/* Filter and Search Bar Container */}
+      <div className="p-4 sm:p-5 bg-white/90 backdrop-blur-md rounded-2xl border border-slate-200/90 shadow-2xs space-y-4">
         <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between">
-          {/* Search Input */}
+          {/* Search Input with Clear Button */}
           <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Filter tools by keyword..."
-              className="w-full pl-10 pr-4 py-2.5 bg-white rounded-xl border border-slate-300 text-sm focus:border-emerald-500 focus:outline-hidden"
+              placeholder="Search tools by name or keyword (e.g. compress, bmi, json)..."
+              className="w-full pl-10 pr-9 py-2.5 bg-slate-50 hover:bg-slate-100/70 focus:bg-white rounded-xl border border-slate-200 focus:border-emerald-500 text-sm focus:outline-hidden transition-all"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={() => setSearchQuery('')}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
           </div>
 
-          <span className="text-xs text-slate-500 font-medium self-end sm:self-center">
-            Showing <strong className="text-slate-800 tabular-nums">{filteredTools.length}</strong> tools
-          </span>
+          <div className="text-xs font-semibold text-slate-500 self-end sm:self-center px-3 py-1.5 bg-slate-50 rounded-lg border border-slate-100">
+            Showing <strong className="text-slate-900 tabular-nums">{filteredTools.length}</strong> of {ALL_TOOLS.length} utilities
+          </div>
         </div>
 
-        {/* Category Tabs (Segmented controls) */}
-        <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none">
+        {/* Category Tabs (Segmented controls with Category Color Personalities) */}
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none">
           <button
             onClick={() => setSelectedCategory('all')}
-            className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap transition-colors cursor-pointer ${
+            className={`px-3.5 py-2 text-xs font-bold rounded-xl whitespace-nowrap transition-all cursor-pointer ${
               selectedCategory === 'all'
                 ? 'bg-slate-900 text-white shadow-xs'
-                : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200/80'
             }`}
           >
             All Tools ({ALL_TOOLS.length})
           </button>
+
           {CATEGORY_LIST.map((cat) => {
             const count = ALL_TOOLS.filter((t) => t.category === cat.id).length;
+            const theme = getCategoryTheme(cat.id as ToolCategory);
+            const isSelected = selectedCategory === cat.id;
+
             return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg whitespace-nowrap transition-colors cursor-pointer ${
-                  selectedCategory === cat.id
-                    ? 'bg-emerald-600 text-white shadow-xs'
-                    : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200'
+                className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-xl whitespace-nowrap transition-all cursor-pointer ${
+                  isSelected
+                    ? `${theme.iconBg} text-white shadow-sm`
+                    : 'bg-slate-100 text-slate-600 hover:text-slate-900 hover:bg-slate-200/80'
                 }`}
               >
-                {cat.name} ({count})
+                <span>{cat.name}</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full ${isSelected ? 'bg-white/20 text-white' : 'bg-slate-200/70 text-slate-600'}`}>
+                  {count}
+                </span>
               </button>
             );
           })}
@@ -96,42 +119,24 @@ export const AllToolsPage: React.FC = () => {
 
       {/* Tools Grid */}
       {filteredTools.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
           {filteredTools.map((tool) => (
-            <Link
-              key={tool.id}
-              to={tool.path}
-              className="group flex flex-col justify-between p-5 bg-white rounded-2xl border border-slate-200 hover:border-emerald-500/50 hover:shadow-md transition-all duration-200"
-            >
-              <div>
-                <div className="text-[11px] font-semibold text-emerald-700 mb-1">
-                  {tool.category.replace('-tools', ' Tools')}
-                </div>
-                <h3 className="text-sm font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
-                  {tool.name}
-                </h3>
-                <p className="text-xs text-slate-500 mt-1 line-clamp-2 leading-relaxed">
-                  {tool.shortDescription}
-                </p>
-              </div>
-
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs font-semibold text-emerald-600">
-                <span>Open Tool</span>
-                <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
-              </div>
-            </Link>
+            <ToolCard key={tool.id} tool={tool} />
           ))}
         </div>
       ) : (
-        <div className="text-center py-16 bg-slate-50 rounded-2xl border border-slate-200">
-          <p className="text-sm font-semibold text-slate-700">No tools match your query "{searchQuery}"</p>
-          <p className="text-xs text-slate-400 mt-1">Try another search term or switch categories</p>
+        <div className="text-center py-16 bg-white rounded-2xl border border-slate-200 shadow-2xs">
+          <div className="w-12 h-12 rounded-xl bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-3">
+            <Search className="w-6 h-6" />
+          </div>
+          <p className="text-sm font-bold text-slate-800">No tools match your query "{searchQuery}"</p>
+          <p className="text-xs text-slate-400 mt-1">Try another search term or switch to another category tab</p>
           <button
             onClick={() => {
               setSearchQuery('');
               setSelectedCategory('all');
             }}
-            className="mt-4 px-4 py-2 text-xs font-semibold text-white bg-slate-900 hover:bg-slate-800 rounded-xl"
+            className="mt-4 px-4 py-2 text-xs font-bold text-white bg-slate-900 hover:bg-slate-800 rounded-xl transition-colors cursor-pointer"
           >
             Reset Filters
           </button>
