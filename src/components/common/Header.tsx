@@ -30,15 +30,17 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Zone 2: Navigation Links (Clean text with subtle active state) */}
-            <nav className="hidden md:flex items-center gap-7 text-sm font-medium text-slate-600">
+            <nav aria-label="Main Navigation" className="hidden md:flex items-center gap-6 lg:gap-7 text-sm font-medium text-slate-600">
               <Link 
                 to="/" 
+                aria-current={pathname === '/' ? 'page' : undefined}
                 className={`transition-colors hover:text-emerald-600 ${pathname === '/' ? 'text-emerald-600 font-semibold' : ''}`}
               >
                 Home
               </Link>
               <Link 
                 to="/tools" 
+                aria-current={pathname === '/tools' ? 'page' : undefined}
                 className={`transition-colors hover:text-emerald-600 ${pathname === '/tools' ? 'text-emerald-600 font-semibold' : ''}`}
               >
                 All Tools
@@ -47,10 +49,13 @@ export const Header: React.FC = () => {
               {/* Category Dropdown */}
               <div className="relative" onMouseLeave={() => setCategoryMenuOpen(false)}>
                 <button
+                  type="button"
                   onClick={() => setCategoryMenuOpen(!categoryMenuOpen)}
                   onMouseEnter={() => setCategoryMenuOpen(true)}
-                  className={`flex items-center gap-1 transition-colors hover:text-emerald-600 py-2 ${pathname.includes('-tools') || pathname === '/calculators' ? 'text-emerald-600 font-semibold' : ''}`}
+                  className={`flex items-center gap-1 transition-colors hover:text-emerald-600 py-2 cursor-pointer ${pathname.includes('-tools') || pathname === '/calculators' ? 'text-emerald-600 font-semibold' : ''}`}
                   aria-expanded={categoryMenuOpen}
+                  aria-haspopup="true"
+                  aria-label="Toggle tool categories menu"
                 >
                   <span>Categories</span>
                   <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${categoryMenuOpen ? 'rotate-180' : ''}`} />
@@ -58,7 +63,7 @@ export const Header: React.FC = () => {
 
                 {categoryMenuOpen && (
                   <div 
-                    className="absolute top-full left-0 w-64 pt-2 shadow-lg"
+                    className="absolute top-full left-0 w-64 pt-2 shadow-lg z-50"
                     onMouseEnter={() => setCategoryMenuOpen(true)}
                   >
                     <div className="bg-white rounded-xl border border-slate-200 shadow-xl py-2 px-1">
@@ -79,21 +84,31 @@ export const Header: React.FC = () => {
 
               <Link 
                 to="/blog" 
+                aria-current={pathname.startsWith('/blog') ? 'page' : undefined}
                 className={`transition-colors hover:text-emerald-600 ${pathname.startsWith('/blog') ? 'text-emerald-600 font-semibold' : ''}`}
               >
                 Blog
               </Link>
               <Link 
                 to="/developer" 
+                aria-current={pathname === '/developer' ? 'page' : undefined}
                 className={`transition-colors hover:text-emerald-600 ${pathname === '/developer' ? 'text-emerald-600 font-semibold' : ''}`}
               >
                 Developer
               </Link>
               <Link 
                 to="/about" 
+                aria-current={pathname === '/about' ? 'page' : undefined}
                 className={`transition-colors hover:text-emerald-600 ${pathname === '/about' ? 'text-emerald-600 font-semibold' : ''}`}
               >
                 About
+              </Link>
+              <Link 
+                to="/contact" 
+                aria-current={pathname === '/contact' ? 'page' : undefined}
+                className={`transition-colors hover:text-emerald-600 ${pathname === '/contact' ? 'text-emerald-600 font-semibold' : ''}`}
+              >
+                Contact
               </Link>
             </nav>
 
@@ -124,7 +139,7 @@ export const Header: React.FC = () => {
         {/* Mobile menu dropdown */}
         {mobileMenuOpen && (
           <div className="md:hidden border-t border-slate-200 bg-white px-4 pt-3 pb-6 space-y-3 shadow-lg">
-            <div className="space-y-1">
+            <nav aria-label="Mobile Navigation" className="space-y-1">
               <Link
                 to="/"
                 onClick={() => setMobileMenuOpen(false)}
@@ -184,7 +199,7 @@ export const Header: React.FC = () => {
               >
                 Contact
               </Link>
-            </div>
+            </nav>
           </div>
         )}
       </header>

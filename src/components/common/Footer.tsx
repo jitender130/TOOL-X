@@ -36,8 +36,8 @@ export const Footer: React.FC = () => {
           </div>
 
           {/* Categories Column */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-900 mb-3">Tool Categories</h4>
+          <nav aria-label="Tool Categories">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-900 mb-3">Tool Categories</h3>
             <ul className="space-y-2 text-sm">
               {CATEGORY_LIST.map((cat) => (
                 <li key={cat.id}>
@@ -47,11 +47,11 @@ export const Footer: React.FC = () => {
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Popular Tools */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-900 mb-3">Popular Utilities</h4>
+          <nav aria-label="Popular Tools">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-900 mb-3">Popular Utilities</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link to="/pdf-tools/compress-pdf" className="text-slate-600 hover:text-emerald-600 transition-colors">
@@ -84,11 +84,11 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
             </ul>
-          </div>
+          </nav>
 
           {/* Company & Legal */}
-          <div>
-            <h4 className="text-xs font-semibold uppercase tracking-wider text-slate-900 mb-3">Platform & Legal</h4>
+          <nav aria-label="Company and Legal Links">
+            <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-900 mb-3">Platform & Legal</h3>
             <ul className="space-y-2 text-sm">
               <li>
                 <Link to="/tools" className="text-slate-600 hover:text-emerald-600 transition-colors">
@@ -132,7 +132,7 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
             </ul>
-          </div>
+          </nav>
         </div>
 
         {/* Bottom Bar */}
